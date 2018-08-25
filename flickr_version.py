@@ -12,6 +12,7 @@ import re
 
 num_guesses = 5
 word_bank = ["horse", "cow", "car", "windmill", "cup"]
+image_size = 200
 # the sizes of images that we can retrieve from flickr 
 # they all have different sizes, but lets pick the large one (l)
 # flickr_sizes = ['q', 'n', 'c', 'sq', 'm', 's', 'l', 'z', 't'] 
@@ -32,7 +33,6 @@ def get_image_urls(word):
     random_chunks = random.sample(j, num_guesses)
     ret_urls = []
     for chunk in random_chunks:
-        print(chunk["sizes"].keys())
         for sz in flicker_size_prefs:
             if sz in chunk["sizes"]:
                 ret_urls.append("https:" + chunk["sizes"][sz]["url"])
@@ -42,7 +42,7 @@ def get_image_urls(word):
 def get_ascii(url):
     url = url.replace("?zz=1", "")
     # XXX: we use a shell command because I can't get the python requests thing working...
-    html_result = os.popen("""curl 'http://www.glassgiant.com/ascii/ascii.php' -H 'Connection: keep-alive' -H 'Pragma: no-cache' -H 'Cache-Control: no-cache' -H 'Origin: http://www.glassgiant.com' -H 'Upgrade-Insecure-Requests: 1' -H 'Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryZh7v5BlhNSRPM1Il' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.75 Safari/537.36' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8' -H 'Referer: http://www.glassgiant.com/ascii/' -H 'Accept-Encoding: gzip, deflate' -H 'Accept-Language: en-US,en;q=0.9' --data-binary $'------WebKitFormBoundaryZh7v5BlhNSRPM1Il\r\nContent-Disposition: form-data; name="maxwidth"\r\n\r\n160\r\n------WebKitFormBoundaryZh7v5BlhNSRPM1Il\r\nContent-Disposition: form-data; name="fontsize"\r\n\r\n8\r\n------WebKitFormBoundaryZh7v5BlhNSRPM1Il\r\nContent-Disposition: form-data; name="webaddress"\r\n\r\n{}\r\n------WebKitFormBoundaryZh7v5BlhNSRPM1Il\r\nContent-Disposition: form-data; name="ggfile"; filename=""\r\nContent-Type: application/octet-stream\r\n\r\n\r\n------WebKitFormBoundaryZh7v5BlhNSRPM1Il\r\nContent-Disposition: form-data; name="MAX_FILE_SIZE"\r\n\r\n3145728\r\n------WebKitFormBoundaryZh7v5BlhNSRPM1Il\r\nContent-Disposition: form-data; name="negative"\r\n\r\nN\r\n------WebKitFormBoundaryZh7v5BlhNSRPM1Il--\r\n' --compressed""".format(url)).read()
+    html_result = os.popen("""curl 'http://www.glassgiant.com/ascii/ascii.php' -H 'Connection: keep-alive' -H 'Pragma: no-cache' -H 'Cache-Control: no-cache' -H 'Origin: http://www.glassgiant.com' -H 'Upgrade-Insecure-Requests: 1' -H 'Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryZh7v5BlhNSRPM1Il' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.75 Safari/537.36' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8' -H 'Referer: http://www.glassgiant.com/ascii/' -H 'Accept-Encoding: gzip, deflate' -H 'Accept-Language: en-US,en;q=0.9' --data-binary $'------WebKitFormBoundaryZh7v5BlhNSRPM1Il\r\nContent-Disposition: form-data; name="maxwidth"\r\n\r\n{0}\r\n------WebKitFormBoundaryZh7v5BlhNSRPM1Il\r\nContent-Disposition: form-data; name="fontsize"\r\n\r\n8\r\n------WebKitFormBoundaryZh7v5BlhNSRPM1Il\r\nContent-Disposition: form-data; name="webaddress"\r\n\r\n{1}\r\n------WebKitFormBoundaryZh7v5BlhNSRPM1Il\r\nContent-Disposition: form-data; name="ggfile"; filename=""\r\nContent-Type: application/octet-stream\r\n\r\n\r\n------WebKitFormBoundaryZh7v5BlhNSRPM1Il\r\nContent-Disposition: form-data; name="MAX_FILE_SIZE"\r\n\r\n3145728\r\n------WebKitFormBoundaryZh7v5BlhNSRPM1Il\r\nContent-Disposition: form-data; name="negative"\r\n\r\nN\r\n------WebKitFormBoundaryZh7v5BlhNSRPM1Il--\r\n' --compressed 2>/dev/null""".format(image_size,url)).read()
 
     b = BeautifulSoup(html_result, "html.parser")
     # extract the ascii art from the html
@@ -54,6 +54,8 @@ def get_ascii(url):
             res.append(str(a))
     return "".join(res)
 
+def pick_subject():
+    return random.choice(word_bank)
 #    
 #    # use session, because this uses PHPSESSIDs to yield data...
 #    session = requests.session()
@@ -90,8 +92,15 @@ def get_ascii(url):
     # TODO: parse from the resulting page
 
 if __name__ == "__main__":
-    urls = get_image_urls("horse")
-    print(urls)
-    print(get_ascii(urls[0]))
-    input()
+    word = random.choice(word_bank)
+    urls = get_image_urls(word)
+    for url in urls:
+        print(get_ascii(url))
+        guess = input("What is this object?\n> ")
+        if guess == word:
+            print("correct!")
+            sys.exit(0)
+        print('incorrect...loading new image (of same object)')
+    print("bad robot! it was actually a:", word)
+    sys.exit(-1)
 
