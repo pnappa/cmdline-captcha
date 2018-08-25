@@ -64,9 +64,12 @@ if __name__ == "__main__":
         guess = input("hello human. what is this object? (you'll receive a different image if you get this wrong\n")
         if guess == word:
             print('well done!')
+            browser.quit()
             sys.exit(0)
+
         print("not quite... downloading another image of same subject")
 
     print('go away robot!!')
+    browser.quit()
     sys.exit(-1)
 
