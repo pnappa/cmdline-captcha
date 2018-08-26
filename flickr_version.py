@@ -26,7 +26,6 @@ flicker_size_prefs = ["l", "c", "z", "m", "n", "q", "sq", "t"]
 # search flickr and get a series of URLs
 def get_image_urls(word):
     query_str = "https://www.flickr.com/search/?sort=relevance&text={}&fr=sfp&fr2=piv-web&ytcheck=1".format(word)
-    print("getting:", query_str)
     r = requests.get(query_str)
     search_reg = re.search("modelExport:.*", r.text)
     # extract the js that has all this stuff
@@ -81,44 +80,9 @@ def download_img(url):
 # the version that uses my library
 def colour_ascii(url):
     filename = download_img(url)
-    print("saved to:", filename)
     s = img2ansi.convert(filename, is_unicode=False, is_256=True)
-    #os.remove(filename)
-
-#     the following shit doesn't work, dunno why
-#    # use session, because this uses PHPSESSIDs to yield data...
-#    session = requests.session()
-#    # do this to get a cookie
-#    session.get("http://www.glassgiant.com/ascii/")
-#    print(session.cookies)
-#    # possibly the best site to exist: https://curl.trillworks.com/
-#    # used this to convert from cURL (right click, copy as cURL from chrome dev tools) to python requests!
-#    headers = {
-#        'Connection': 'keep-alive',
-#        'Pragma': 'no-cache',
-#        'Cache-Control': 'no-cache',
-#        'Origin': 'http://www.glassgiant.com',
-#        'Upgrade-Insecure-Requests': '1',
-#        'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryZh7v5BlhNSRPM1Il',
-#        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.75 Safari/537.36',
-#        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-#        'Referer': 'http://www.glassgiant.com/ascii/',
-#        'Accept-Encoding': 'gzip, deflate',
-#        'Accept-Language': 'en-US,en;q=0.9',
-#    }
-#
-#    data = '$------WebKitFormBoundaryZh7v5BlhNSRPM1Il\\r\\nContent-Disposition: form-data; name="maxwidth"\\r\\n\\r\\n80\\r\\n------WebKitFormBoundaryZh7v5BlhNSRPM1Il\\r\\nContent-Disposition: form-data; name="fontsize"\\r\\n\\r\\n8\\r\\n------WebKitFormBoundaryZh7v5BlhNSRPM1Il\\r\\nContent-Disposition: form-data; name="webaddress"\\r\\n\\r\\n{}\\r\\n------WebKitFormBoundaryZh7v5BlhNSRPM1Il\\r\\nContent-Disposition: form-data; name="ggfile"; filename=""\\r\\nContent-Type: application/octet-stream\\r\\n\\r\\n\\r\\n------WebKitFormBoundaryZh7v5BlhNSRPM1Il\\r\\nContent-Disposition: form-data; name="MAX_FILE_SIZE"\\r\\n\\r\\n3145728\\r\\n------WebKitFormBoundaryZh7v5BlhNSRPM1Il\\r\\nContent-Disposition: form-data; name="negative"\\r\\n\\r\\nN\\r\\n------WebKitFormBoundaryZh7v5BlhNSRPM1Il--\\r\\n'.format(url)
-#
-#    response = session.post('http://www.glassgiant.com/ascii/ascii.php', headers=headers, data=data) 
-#    print(response.text)
-#
-#    # TODO: replace with requests
-#    # submit everything... now we're able to not even need to download the image!
-#    browser.visit("http://www.glassgiant.com/ascii/")
-#    browser.select("maxwidth", "120")
-#    browser.fill("webaddress", url)
-#    browser.find_by_css('input[type="submit"]')[0].click()
-    # TODO: parse from the resulting page
+    os.remove(filename)
+    return s
 
 if __name__ == "__main__":
     word = random.choice(word_bank)
