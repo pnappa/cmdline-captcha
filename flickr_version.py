@@ -14,8 +14,7 @@ import re
 # my beautiful library
 import img2ansi
 
-num_guesses = 5
-word_bank = ["horse", "cow", "car", "windmill", "cup"]
+num_guesses = 3
 image_size = 200
 # the sizes of images that we can retrieve from flickr 
 # they all have different sizes, but lets pick the large one (l)
@@ -80,21 +79,29 @@ def download_img(url):
 # the version that uses my library
 def colour_ascii(url):
     filename = download_img(url)
-    s = img2ansi.convert(filename, is_unicode=False, is_256=True)
+    s = img2ansi.convert(filename, is_unicode=False, is_256=False)
     os.remove(filename)
     return s
 
 if __name__ == "__main__":
-    word = random.choice(word_bank)
-    urls = get_image_urls(word)
-    for url in urls:
-        #print(get_ascii(url))
-        print(colour_ascii(url))
-        guess = input("What is this object?\n> ")
-        if guess == word:
-            print("correct!")
-            sys.exit(0)
-        print('incorrect...loading new image (of same object)')
-    print("bad robot! it was actually a:", word)
-    sys.exit(-1)
+    # populate objects
+    with open('objects', 'r') as o:
+        word_bank = [x.strip() for x in o.readlines()]
+
+    try:
+        word = random.choice(word_bank)
+        urls = get_image_urls(word)
+        for url in urls:
+            #print(get_ascii(url))
+            print(colour_ascii(url))
+            guess = input("What is this object?\n> ")
+            if guess == word:
+                print("correct!")
+                sys.exit(0)
+            print('incorrect...loading new image (of same object)')
+        print("bad robot! it was actually a:", word)
+        sys.exit(-1)
+    except Exception as e:
+        print(e)
+        print(word)
 

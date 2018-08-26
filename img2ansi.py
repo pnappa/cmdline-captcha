@@ -95,10 +95,10 @@ def _toAnsi(img, oWidth=40, is_unicode=False, is_256=False):
     return ansi_string
 
 def convert(filename, is_unicode=False, is_256=False):
-    im = Image.open(filename)
+    # open the img, but convert to rgb because this fails if grayscale (assumes pixels are at least triplets)
+    im = Image.open(filename).convert('RGB')
     stringo = _toAnsi(im, is_unicode=is_unicode, is_256=is_256)
     return stringo
 
 if __name__ == "__main__":
-    print(_rgb_to_256(28, 228, 18))
     print(convert(sys.argv[1], is_256=True))
