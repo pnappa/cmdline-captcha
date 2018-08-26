@@ -11,7 +11,7 @@ import functools
 # convert a colour to one that can be displayed in a shitty terminal (sorry guys)
 def _rgb_to_256(r,g,b):
     r,g,b = map(int, (r,g,b))
-    # i actually don't know what this does
+    # i actually don't know how he came up with these colours
     colours = []
     colours.append([0, 0, 0, 0])
     colours.append([128, 0, 0, 1])
@@ -42,8 +42,8 @@ def _rgb_to_256(r,g,b):
 
     # get the best term colour
     def best(candidates, source):
-        # sort based on the distance from the populated colour table - closest wins!
-        return sorted(candidates, key=lambda x: abs(x[0] - source[0]) + abs(x[1] - source[1]) + abs(x[2] - source[2]))[0]
+        # based on the distance from the populated colour table - closest wins!
+        return min(candidates, key=lambda x: abs(x[0] - source[0]) + abs(x[1] - source[1]) + abs(x[2] - source[2]))
 
     return best(colours, [r,g,b])[3]
 
@@ -66,12 +66,16 @@ def _toAnsi(img, oWidth=40, is_unicode=False, is_256=False):
 
     i = 0
     n = img.width*img.height
-    print(img.width, img.height)
     while i < n:
         r,g,b = map(str, img.getpixel((i % img.width, i//img.width)))
         if is_256:
             if is_unicode:
-                pass
+                raise NotImplementedError("unicode functionality not implemented yet.. idk what they did")
+                #bg_col = _rgb_to_256(r,g,b)
+                ## is the next row's colour
+                #rprime, gprime, bprime = map(str, img.getpixel((i%img.width, i//img.width + 1)))
+                #fg_col = _rgb_to_256(rprime, gprime, bprime)
+                #pass
             else:
                 ansi_string += '\x1B[48;5;' + str(_rgb_to_256(r,g,b)) + 'm  '
                 i += 1
@@ -80,14 +84,13 @@ def _toAnsi(img, oWidth=40, is_unicode=False, is_256=False):
         else:
             if is_unicode:
                 #TODO: this is a bit more complicated..
-                pass
+                raise NotImplementedError("unicode functionality not implemented yet.. idk what they did")
             else:
                 ansi_string += '\x1B[48;2;' + r + ';' + g + ';' + b + 'm  '
                 i += 1
                 # newline
                 if i % destWidth == 0:
                     ansi_string += '\x1B[0m\n'
-    print("num pixels:", i)
 
     return ansi_string
 
