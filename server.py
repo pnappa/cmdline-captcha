@@ -1,6 +1,9 @@
 import time
 import socket
 import improved
+import os
+import struct
+import subprocess
 
 # creating a socket object
 s = socket.socket(socket.AF_INET,
@@ -8,7 +11,7 @@ s = socket.socket(socket.AF_INET,
 
 # get local Host machine name
 host = ''
-port = 6963
+port = 6962
 obj_dir = './obj_pics'
 
 # bind to pot
@@ -21,6 +24,7 @@ while True:
     # establish connection
     clientSocket, addr = s.accept()
     print("got a connection from %s" % str(addr))
+    print(os.popen('lsof -i:{} | cut -f 3 -d" " | grep -v "^$"'.format(addr[1])).read())
     word = improved.pick_subject(obj_dir)
     print("getting them to guess a", word)
     filenames = improved.get_image_filenames(word, obj_dir)

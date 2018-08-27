@@ -58,6 +58,8 @@ def _toAnsi(img, oWidth=40, is_unicode=False, is_256=False):
         scale = destWidth / oWidth
         destWidth = oWidth
         destHeight = math.floor(destHeight/scale)
+        if is_unicode:
+            destHeight //= 2
 
     # resize to new size (i don't care about resizing method, can be nearest neighbour for all i care (default afaik))
     img = img.resize((destWidth, destHeight))
@@ -70,12 +72,8 @@ def _toAnsi(img, oWidth=40, is_unicode=False, is_256=False):
         r,g,b = map(str, img.getpixel((i % img.width, i//img.width)))
         if is_256:
             if is_unicode:
+                #TODO: this is a bit more complicated..
                 raise NotImplementedError("unicode functionality not implemented yet.. idk what they did")
-                #bg_col = _rgb_to_256(r,g,b)
-                ## is the next row's colour
-                #rprime, gprime, bprime = map(str, img.getpixel((i%img.width, i//img.width + 1)))
-                #fg_col = _rgb_to_256(rprime, gprime, bprime)
-                #pass
             else:
                 ansi_string += '\x1B[48;5;' + str(_rgb_to_256(r,g,b)) + 'm  '
                 i += 1
@@ -83,8 +81,22 @@ def _toAnsi(img, oWidth=40, is_unicode=False, is_256=False):
                     ansi_string += '\x1B[0m\n'
         else:
             if is_unicode:
-                #TODO: this is a bit more complicated..
-                raise NotImplementedError("unicode functionality not implemented yet.. idk what they did")
+                if i // destWidth == destHeight - 1:
+                    break
+                # the next row's pixel
+                rprime, gprime, bprime = map(str, img.getpixel((i%img.width, i//img.width + 1)))
+                if r == rprime and g == gprime and b == bprime:
+                    ansi_string += '\x1B[48;2;' + r + ';' + g + ';' + b + 'm '
+                else:
+                    # one off the last row..?
+                    if destHeight - (i // destWidth) == 1:
+                        ansi_string += '\x1B[0m\x1B[48;2;' + rprime + ';' + gprime + ';' + bprime + 'm '
+                        pass
+                    else:
+                        ansi_string += '\x1B[48;2;' + r + ';' + g + ';' + b + 'm\x1B[38;2;' + rprime + ';' + gprime + ';' + bprime + 'm▄'
+                i += 1
+                if i % destWidth == 0:
+                    ansi_string += '\x1b[0m\n'
             else:
                 ansi_string += '\x1B[48;2;' + r + ';' + g + ';' + b + 'm  '
                 i += 1
@@ -101,4 +113,4 @@ def convert(filename, is_unicode=False, is_256=False):
     return stringo
 
 if __name__ == "__main__":
-    print(convert(sys.argv[1], is_256=True))
+    print(convert(sys.argv[1], is_256=False, is_unicode=False))

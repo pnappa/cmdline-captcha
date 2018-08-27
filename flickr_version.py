@@ -92,8 +92,8 @@ if __name__ == "__main__":
         word = random.choice(word_bank)
         urls = get_image_urls(word)
         for url in urls:
-            #print(get_ascii(url))
-            print(colour_ascii(url))
+            print(get_ascii(url))
+            #print(colour_ascii(url))
             guess = input("What is this object?\n> ")
             if guess == word:
                 print("correct!")
