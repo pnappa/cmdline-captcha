@@ -48,14 +48,13 @@ def levenshtein_distance(s1, s2):
     return distances[-1]
 
 def correct_word(attempt, correct):
-    return levenshtein_distance(attempt, correct) < 2
+    return levenshtein_distance(attempt, correct) <= 2
 
 if __name__ == "__main__":
     # try:
         directory = "./obj_pics"
         word = pick_subject(directory)
         filenames = get_image_filenames(word, directory)
-        print(filenames)
         for f in filenames:
             print(colour_ascii(f))
             guess = input("What is this object?\n> ")

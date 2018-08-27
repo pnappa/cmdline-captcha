@@ -23,6 +23,8 @@ Follow the prompts. You'll need to download some images that are nice and recogn
     - pluggable, so that other people can write this stuff
     - we want scramblers to thwart people who are piping the output and stuff. of course they can reconstruct it
     - we want a module to change colours a bit, and warp the images a bit.
+ - [ ] Logging, I want to know who and when, and timings for their reponses
+    - my current method of lsof doesn't work.... it requires sudo rights for that
 
 ## Example
 ![example run](examplerun.png)
