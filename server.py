@@ -11,7 +11,7 @@ s = socket.socket(socket.AF_INET,
 
 # get local Host machine name
 host = ''
-port = 6962
+port = 6963
 obj_dir = './obj_pics'
 
 # bind to pot
@@ -24,7 +24,7 @@ while True:
     # establish connection
     clientSocket, addr = s.accept()
     print("got a connection from %s" % str(addr))
-    print(os.popen('lsof -i:{} | cut -f 3 -d" " | grep -v "^$"'.format(addr[1])).read())
+    #print(os.popen('lsof -i:{} | cut -f 3 -d" " | grep -v "^$"'.format(addr[1])).read())
     word = improved.pick_subject(obj_dir)
     print("getting them to guess a", word)
     filenames = improved.get_image_filenames(word, obj_dir)

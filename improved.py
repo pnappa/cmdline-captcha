@@ -15,7 +15,6 @@ import img2ansi
 def get_image_filenames(word, directory, quantity=3):
     prefix = os.path.join(directory, word)
     basenames = list(map(lambda x: x.name, os.scandir(prefix)))
-    print(list(basenames))
     ret = []
     for bname in random.sample(basenames, quantity):
         ret.append(os.path.join(prefix, bname))
@@ -28,7 +27,7 @@ def pick_subject(directory):
 
 # the version that uses my library
 def colour_ascii(filename):
-    s = img2ansi.convert(filename, is_unicode=False, is_256=True)
+    s = img2ansi.convert(filename, is_unicode=True, is_256=False, width=80)
     os.remove(filename)
     return s
 
