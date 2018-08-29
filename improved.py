@@ -51,7 +51,7 @@ def correct_word(attempt, correct):
 
 if __name__ == "__main__":
     # try:
-        directory = "./obj_pics"
+        directory = "./example_objects"
         word = pick_subject(directory)
         filenames = get_image_filenames(word, directory)
         for f in filenames:

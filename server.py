@@ -12,7 +12,7 @@ s = socket.socket(socket.AF_INET,
 # get local Host machine name
 host = ''
 port = 6963
-obj_dir = './obj_pics'
+obj_dir = './example_objects'
 
 # bind to pot
 s.bind((host, port))

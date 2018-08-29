@@ -2,8 +2,17 @@
 A command line interface for preventing bots via ascii image recognition
 
 ## Usage:
-Follow the prompts. You'll need to download some images that are nice and recognisable.
+Follow the prompts. 
 `$ python3 improved.py`
+
+You'll need to download some images that are nice and recognisable. Only a single photo of a windmill (`example_objects/windmill/windmill*.jpeg`) is provided.
+
+Also included is a server version. You can run the server with `python3 server.py`, and connect to it with `nc localhost 6963`.
+
+I recommend lowering the width of the printed image (in `improved.py` and/or `server.py`) which is supplied as an argument to `img2ansi.convert`.
+
+## Example
+![example run](examplerun.png)
 
 ## Requirements
  - python3
@@ -26,5 +35,3 @@ Follow the prompts. You'll need to download some images that are nice and recogn
  - [ ] Logging, I want to know who and when, and timings for their reponses
     - my current method of lsof doesn't work.... it requires sudo rights for that
 
-## Example
-![example run](examplerun.png)
