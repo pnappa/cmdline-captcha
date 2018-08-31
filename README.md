@@ -5,7 +5,7 @@ A command line interface for preventing bots via ascii image recognition
 Follow the prompts. 
 `$ python3 improved.py`
 
-You'll need to download some images that are nice and recognisable. Only a single photo of a windmill (`example_objects/windmill/windmill*.jpeg`) is provided.
+You'll need to download some images that are nice and recognisable (minimum of 3 per subject). Only a single photo of a windmill (`example_objects/windmill/windmill*.jpeg`) is provided.
 
 Also included is a server version. You can run the server with `python3 server.py`, and connect to it with `nc localhost 6963`.
 
