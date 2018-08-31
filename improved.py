@@ -2,7 +2,6 @@ import random
 import string
 import sys
 import subprocess
-import shutil
 import imghdr
 import os
 import json
@@ -28,7 +27,6 @@ def pick_subject(directory):
 # the version that uses my library
 def colour_ascii(filename):
     s = img2ansi.convert(filename, is_unicode=True, is_256=False, width=80)
-    os.remove(filename)
     return s
 
 def levenshtein_distance(s1, s2):
