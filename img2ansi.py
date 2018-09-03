@@ -65,7 +65,7 @@ def _pix_to_escape(r,g,b,is_256):
 # convert the two row's colors to a escape sequence (unicode does two rows at a time)
 def _dual_pix_to_escape(r1, r2, g1, g2, b1, b2, is_256):
     if is_256:
-        raise NotImplementedError("unicode functionality not implemented yet.. idk what they did")
+        return '\x1b[48;5;{}m\x1b[38;5;{}m▄'.format(_rgb_to_256(r1,g1,b1), _rgb_to_256(r2, g2, b2))
     else:
         return '\x1b[48;2;{};{};{}m\x1b[38;2;{};{};{}m▄'.format(r1,g1,b1, r2,g2,b2)
 
@@ -112,4 +112,4 @@ def convert(filename, is_unicode=False, is_256=False, width=40):
     return stringo
 
 if __name__ == "__main__":
-    print(convert(sys.argv[1], is_256=True, is_unicode=False, width=40))
+    print(convert(sys.argv[1], is_256=True, is_unicode=True, width=80))
